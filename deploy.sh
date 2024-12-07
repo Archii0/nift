@@ -13,8 +13,6 @@ mkdir -p /var/nift
 
 mv templates /var/nift
 
-mkdir -p /usr/bin/nift
-
 mv nift.sh /usr/bin/nift
 
 echo "Deployed nift successfully. Pretty nifty."
