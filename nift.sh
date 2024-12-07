@@ -7,8 +7,7 @@ usage() {
 
 pname=$1
 pdir="./${pname}"
-tdir=/home/archie/Repos/nift/templates
-# tdir=/var/nift/templates
+tdir=/var/nift/templates
 
 if [ -z "$pname" ]; then
     usage
