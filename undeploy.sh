@@ -8,3 +8,5 @@ fi
 mv /var/nift/templates .
 
 mv /usr/bin/nift/nift.sh .
+
+echo "Undeployed nift successfully. Pretty nifty."

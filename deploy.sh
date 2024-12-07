@@ -17,4 +17,4 @@ mkdir -p /usr/bin/nift
 
 mv nift.sh /usr/bin/nift
 
-echo "Deployed nift successfully"
+echo "Deployed nift successfully. Pretty nifty."

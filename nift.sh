@@ -47,3 +47,5 @@ for x in *; do
     fi
 
 done
+
+echo "Created new project using $template. Pretty nifty."
