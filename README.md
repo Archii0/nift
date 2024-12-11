@@ -28,6 +28,8 @@ Nift can now be ran with the command:
 nift <project name>
 ```
 
+This will copy your chosen templates to a new directory, with your project name substited into the template files and file names. 
+
 ## Standard Templates
 
 The repo includes some generic dummy templates to start with, including:
