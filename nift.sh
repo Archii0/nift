@@ -16,7 +16,7 @@ elif ! [ -d "$tdir" ]; then
     >&2 echo "Unable to find template directory: $tdir"
     exit 2
 elif [ -d "$pname" ]; then
-    >&2 echo "Prject directory already exists: $pdir"
+    >&2 echo "Project directory already exists: $pdir"
     exit 3
 fi
 
