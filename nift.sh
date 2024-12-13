@@ -9,6 +9,7 @@ pname=$1
 pdir="./${pname}"
 tdir=/var/nift/templates
 
+# error handling for correct useage
 if [ -z "$pname" ]; then
     usage
     exit 1
@@ -24,17 +25,18 @@ cur="$PWD"
 cd $tdir
 echo "Please select a template:"
 
+# show all available templates
 select x in *; do
     template="$x"
     break
 done
 
+# copy template to project folder
 cd $cur
 cp -R ${tdir}/$template $pdir
 cd $pdir
 
-echo "project dir :$pdir"
-
+# function for text substitution in files
 processfile() {
     local file=$1
     new=$(sed "s,PROJECTNAME,$pname,g" <<< "$file")
@@ -50,12 +52,14 @@ processfile() {
     fi
 }
 
+# function for text substitution in directories
 processdirectory() {
     local dir=$1
     curDir="$PWD"
 
+    # 
     if [ ! -d "$dir" ]; then
-        echo "not a dir"
+        echo "Directory $dir does not exist"
         exit 1
     fi
 
@@ -65,13 +69,14 @@ processdirectory() {
         elif [ -d "./$file" ]; then
             base_dir=$(basename "$file")
 
+            # text substitution in the directory name
             if [[ "$base_dir" == *"PROJECTNAME"* ]]; then
                 new_dir_name="${base_dir//PROJECTNAME/$pname}"
                 mv "$file" "$new_dir_name"
                 file=$new_dir_name
             fi
 
-            # process file in subdirectory if it is not empty
+            # process all files in subdirectory if it is not empty
             if ! [ -z "$(ls -A "$file")" ]; then
                 processdirectory $file
             fi
