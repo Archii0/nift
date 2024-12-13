@@ -28,7 +28,7 @@ Nift can now be ran with the command:
 nift <project name>
 ```
 
-This will copy your chosen templates to a new directory, with your project name substited into the template files and file names. 
+This will copy your chosen templates to a new directory, with your project name substituted into the template files and file names. 
 
 ## Standard Templates
 
@@ -38,5 +38,15 @@ The repo includes some generic dummy templates to start with, including:
 - Go
 - Python
 - Rust
- 
+
 Feel free to add your own templates and commit them to the repo.
+
+## Making Templates
+
+To make a new template, make sure that the project is not deployed. If it is you can undeploy by running:
+```bash
+sudo ./undeploy.sh
+```
+
+Then create a new folder in the `/templates` directory with your required setup.
+Note that empty directories are supported by Nift, but are not recorded by git (as git tracks files, not directories). Any empty directories in your template will not be stored in the origin repo - a good idea is to add a file to these directories or include the creation of these directories in your build scripts.
