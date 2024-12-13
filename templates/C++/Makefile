@@ -8,7 +8,14 @@ run:
 	@make all
 	@build/src/PROJECTNAME_run 
 clean:
-	@rm -rf build && mkdir build 
+	@rm -rf build && mkdir build
+	@if [ ! -d ./lib ]; then \
+		mkdir lib; \
+		echo "Creating lib folder"; \
+	else \
+		echo "lib directory exists"; \
+	fi
+
 	@if [ -d .git ]; then \
 		echo "Repository already initialized; skipping git init."; \
 	else \
@@ -18,8 +25,8 @@ clean:
 
 	@if [ -d ./lib/googletest ]; then \
 		cd ./lib/googletest && git pull && cd ../..; \
-	else \
 		echo "Google Test already added; pulling latest updates."; \
+	else \
 		cd ./lib/ && git submodule add https://github.com/google/googletest/ && cd ../..; \
 	fi
 	@cd ./build && cmake .. -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" && cd ..
