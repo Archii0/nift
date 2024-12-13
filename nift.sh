@@ -70,7 +70,11 @@ processdirectory() {
                 mv "$file" "$new_dir_name"
                 file=$new_dir_name
             fi
-            processdirectory $file
+
+            # process file in subdirectory if it is not empty
+            if ! [ -z "$(ls -A "$file")" ]; then
+                processdirectory $file
+            fi
         else
             echo "$file is neither a file or a directory - please add as an issue on GitHub if this type should be supported."
         fi
