@@ -52,7 +52,6 @@ processfile() {
 
 processdirectory() {
     local dir=$1
-    echo "Processing directory: $dir"
     curDir="$PWD"
 
     if [ ! -d "$dir" ]; then
