@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage() {
-    >&2 echo "Usage: $0 <project>"
+    >&2 echo "Usage: $0 <project name>"
     return 0
 }
 
@@ -9,7 +9,7 @@ pname=$1
 pdir="./${pname}"
 tdir=/var/nift/templates
 
-# error handling for correct useage
+# error handling for correct usage
 if [ -z "$pname" ]; then
     usage
     exit 1
@@ -23,13 +23,94 @@ fi
 
 cur="$PWD"
 cd $tdir
-echo "Please select a template:"
 
-# show all available templates
-select x in *; do
-    template="$x"
-    break
-done
+display_tree() {
+    local dir="$1"
+    local indent="$2"
+
+    for entry in "$dir"/*; do
+        if [ -e "$entry" ]; then
+            
+            if [ -d "$entry" ]; then
+                echo -e "$indent├──" "$(basename "$entry")/"
+                display_tree "$entry" "    $indent"
+            else
+                echo -e "$indent├──" "$(basename "$entry")"
+            fi
+        fi
+    done
+}
+
+exit_menus=false
+
+secondary_menu() {
+    template=$1
+    while true; do
+        echo "Choose an option:"
+        echo "1) Use the template"
+        echo "2) Show template description"
+        echo "3) Show template technologies"
+        echo "4) Show template structure"
+        echo "5) Select a different template"
+
+        read -p "" choice
+
+        case $choice in
+            "1")
+                exit_menus=true;
+                return;
+                ;;
+            "2")
+                ;;
+            "3")
+                ;;
+            "4")
+                echo "TEMPLATE STRUCTURE"
+                echo "$template/"
+                display_tree "$template" ""
+                ;;
+            "5")
+                return
+                ;;  
+            *) echo "Other"
+                ;;          
+        esac
+        echo ""
+    done
+}
+
+ain_menu() {
+    
+    while true; do
+        echo "Select a template:"
+        
+        
+        select x in *; do
+            template="$x"
+            case $template in
+                "Quit")
+                    echo "Exiting..."
+                    exit 0
+                    ;;
+                "")
+                    echo "Invalid choice. Please select a valid template."
+                    ;;
+                *)
+                    echo "You selected $template"
+                    secondary_menu "$template"
+                    break
+                    ;;
+            esac
+        done
+
+        if $exit_menus; then
+            return
+        fi
+
+    done
+}
+
+main_menu
 
 # copy template to project folder
 cd $cur
