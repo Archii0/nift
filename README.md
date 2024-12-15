@@ -1,56 +1,87 @@
 # Nift
 
-Nift is a minimal build system for quick-starting projects on Linux.
+Nift is a minimal build system designed for quickly bootstrapping projects on Linux. It simplifies project setup by allowing you to use reusable templates for common file structures and configurations.
+
+---
+
+## Features
+- **Quick Project Setup**: Use templates to generate boilerplate code and directory structures.
+- **Customizable Templates**: Create and manage templates tailored to your workflow.
+- **Ease of Use**: Deploy once and generate projects with a single command.
+- **Verbose Mode**: View directory structures and manage templates via an intuitive CLI menu.
+
+---
+
+## Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-repo/nift.git
+cd nift
+```
+
+### 2. Deploy Nift
+Run the deployment script to set up Nift:
+```bash
+sudo ./deploy.sh
+```
+This will:
+- Move the `/templates` directory to `/var/nift`.
+- Place the Nift script in `/usr/bin/`, making it globally accessible.
+
+---
 
 ## Usage
 
-### Setup
-Clone the repo and create your own templates in the `/templates` directory. Information about making templates is discussed [here](#making-templates)
-
-### Running Nift
-
-Once your templates are made, run `sudo ./deploy.sh`, which will move your templates directory to `/var/nift` and the script to run it to `/usr/bin/nift`.
-
-Nift can now be ran with the command:
+### Generating a Project
+To generate a project using a template, run:
 ```bash
-nift <project name>
+nift <project-name>
 ```
+Nift will:
+1. Create a new directory named `<project-name>`.
+2. Copy the chosen template files into the directory.
+3. Replace placeholders (e.g., `PROJECTNAME`) in filenames and file content with the specified `<project-name>`.
 
-This will copy your chosen templates to a new directory, with your project name substituted into the template files and file names. 
-
-Nift can also be ran in verbose mode:
+### Verbose Mode
+Enable verbose mode for additional functionality:
 ```bash
-nift <project name> [-v|--verbose]
+nift <project-name> [-v|--verbose]
 ```
+In verbose mode, you can:
+- Browse available templates via a CLI menu.
+- View directory structures of templates, such as:
+  ```
+  C++/
+  ├── CMakeLists.txt
+  ├── lib/
+  ├── Makefile
+  ├── src/
+      ├── CMakeLists.txt
+      ├── main.cpp
+  ├── tests/
+      ├── CMakeLists.txt
+      ├── main.cpp
+  ```
 
-Verbose mode features include a CLI menu, and functionality to view template directory structures, such as:
-```bash
-C++/
-├── CMakeLists.txt
-├── lib/
-├── Makefile
-├── src/
-    ├── CMakeLists.txt
-    ├── main.cpp
-├── tests/
-    ├── CMakeLists.txt
-    ├── main.cpp
-```
+---
 
-## Making Templates
+## Creating Custom Templates
 
-To make a new template, make sure that the project is not deployed. If it is you can undeploy by running:
+### 1. Undeploy Nift
+Before modifying templates, undeploy Nift:
 ```bash
 sudo ./undeploy.sh
 ```
+This removes Nift's deployed files, allowing you to safely edit templates.
 
-Then create a new folder in the `/templates` directory with your required setup.
+### 2. Add a Template
+Create a new folder in the `/templates` directory to define your template. Use `PROJECTNAME` as a placeholder in filenames and file content for dynamic substitution.
 
-Use the identifier `PROJECTNAME` both in file names and in files, where you want your chosen project name to be. 
-
-An example of a C file, named `PROJECTNAME.c`:
+#### Example: C Template
+File: `PROJECTNAME.c`
 ```c
-/* PROJECTNAME.c*/
+/* PROJECTNAME.c */
 
 #include "PROJECTNAME.h"
 
@@ -59,17 +90,50 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 ```
-Template are useful for including the standard main function, common type synonyms, library imports, build system files (e.g. makefiles) as well as setting up project directories for larger projects.
+Templates are ideal for standardizing common project elements, such as:
+- Main function stubs.
+- Type definitions and imports.
+- Build system files (e.g., Makefiles).
+- Directory structures for larger projects.
 
-Note that empty directories are supported by Nift, but are not recorded by git (as git tracks files, not directories). Any empty directories in your template will not be stored in the origin repo - a good idea is to add a file to these directories or include the creation of these directories in your build scripts.
+#### Note on Empty Directories
+Git does not track empty directories. To preserve them, you can:
+- Add a placeholder file (e.g., `.gitkeep`).
+- Automate directory creation in your build scripts.
 
-## Standard Templates
+### 3. Redeploy Nift
+Once your templates are ready, redeploy:
+```bash
+sudo ./deploy.sh
+```
 
-The repo includes some generic dummy templates to start with, including:
-- C (with a Makefile)
-- C++ (using CUDA runtime)
-- Go
-- Python
-- Rust
+---
 
-Feel free to add your own templates and commit them to the repo.
+## Built-in Templates
+Nift includes the following starter templates:
+- **C**: A basic C project with a Makefile.
+- **C++**: A CUDA runtime project with CMake support.
+- **Go**: A Go project starter.
+- **Python**: A basic Python project.
+- **Rust**: A Rust project skeleton.
+
+Feel free to enhance these templates or add your own to the repository.
+
+---
+
+## Contribution
+Contributions are welcome! Submit a pull request to:
+- Add new templates.
+- Improve existing templates.
+- Enhance Nift's functionality.
+
+---
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Support
+If you encounter issues or have questions, open an issue on the [GitHub repository](https://github.com/your-repo/nift).
+
