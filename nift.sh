@@ -9,7 +9,6 @@ VERBOSE=0
 pname=$1
 pdir="./${pname}"
 tdir=/var/nift/templates
-# tdir=/home/archie/Repos/nift/templates
 
 # Error handling for correct usage
 if [ -z "$pname" ]; then
@@ -82,9 +81,13 @@ secondary_menu() {
                 ;;
             "2")
                 echo "not implemented yet"
+                echo "Press any key to continue..."
+                read -n 1 -s
                 ;;
             "3")
                 echo "not implemented yet"
+                echo "Press any key to continue..."
+                read -n 1 -s
                 ;;
             "4")
                 echo "TEMPLATE STRUCTURE"
@@ -97,6 +100,8 @@ secondary_menu() {
                 return
                 ;;  
             *) echo "Other"
+                echo "Press any key to continue..."
+                read -n 1 -s
                 ;;          
         esac
         echo ""
@@ -136,10 +141,8 @@ main_menu() {
 }
 
 if [ "$VERBOSE" -eq 1 ]; then
-    echo "verbose mode"
     main_menu
 else
-    echo "non verbose mode"
     select x in *; do
         template="$x"
         break
@@ -203,4 +206,4 @@ processdirectory() {
 # Process the directory
 processdirectory "."
 
-echo "Created new project using $template. Pretty nifty."
+echo "Created new project using $template template. Pretty nifty."
