@@ -16,7 +16,7 @@ Nift is a minimal build system designed for quickly bootstrapping projects on Li
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-repo/nift.git
+git clone https://github.com/Archii0/nift.git
 cd nift
 ```
 
@@ -135,5 +135,5 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 ## Support
-If you encounter issues or have questions, open an issue on the [GitHub repository](https://github.com/your-repo/nift).
+If you encounter issues or have questions, open an issue on the [GitHub repository](https://github.com/Archii0/nift/issues).
 
