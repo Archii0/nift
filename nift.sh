@@ -1,15 +1,17 @@
 #!/bin/bash
 
 usage() {
-    >&2 echo "Usage: $0 <project name>"
+    >&2 echo "Usage: $0 <project name> [-v|--verbose]"
     return 0
 }
 
+VERBOSE=0
 pname=$1
 pdir="./${pname}"
 tdir=/var/nift/templates
+# tdir=/home/archie/Repos/nift/templates
 
-# error handling for correct usage
+# Error handling for correct usage
 if [ -z "$pname" ]; then
     usage
     exit 1
@@ -21,6 +23,23 @@ elif [ -d "$pname" ]; then
     exit 3
 fi
 
+shift # Shift to handle the optional verbose flag
+
+# Handle optional verbose flag
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -v|--verbose)
+            VERBOSE=1
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+# Store the current working directory, and cd to templates to show options to the user
 cur="$PWD"
 cd $tdir
 
@@ -46,6 +65,7 @@ exit_menus=false
 secondary_menu() {
     template=$1
     while true; do
+        clear
         echo "Choose an option:"
         echo "1) Use the template"
         echo "2) Show template description"
@@ -61,13 +81,17 @@ secondary_menu() {
                 return;
                 ;;
             "2")
+                echo "not implemented yet"
                 ;;
             "3")
+                echo "not implemented yet"
                 ;;
             "4")
                 echo "TEMPLATE STRUCTURE"
                 echo "$template/"
                 display_tree "$template" ""
+                echo "Press any key to continue..."
+                read -n 1 -s
                 ;;
             "5")
                 return
@@ -79,9 +103,10 @@ secondary_menu() {
     done
 }
 
-ain_menu() {
+main_menu() {
     
     while true; do
+        clear
         echo "Select a template:"
         
         
@@ -110,14 +135,23 @@ ain_menu() {
     done
 }
 
-main_menu
+if [ "$VERBOSE" -eq 1 ]; then
+    echo "verbose mode"
+    main_menu
+else
+    echo "non verbose mode"
+    select x in *; do
+        template="$x"
+        break
+    done
+fi
 
-# copy template to project folder
+# Copy template to project folder
 cd $cur
 cp -R ${tdir}/$template $pdir
 cd $pdir
 
-# function for text substitution in files
+# Function for text substitution in files
 processfile() {
     local file=$1
     new=$(sed "s,PROJECTNAME,$pname,g" <<< "$file")
@@ -133,12 +167,11 @@ processfile() {
     fi
 }
 
-# function for text substitution in directories
+# Function for text substitution in directories
 processdirectory() {
     local dir=$1
     curDir="$PWD"
 
-    # 
     if [ ! -d "$dir" ]; then
         echo "Directory $dir does not exist"
         exit 1
@@ -150,14 +183,14 @@ processdirectory() {
         elif [ -d "./$file" ]; then
             base_dir=$(basename "$file")
 
-            # text substitution in the directory name
+            # Text substitution in the directory name
             if [[ "$base_dir" == *"PROJECTNAME"* ]]; then
                 new_dir_name="${base_dir//PROJECTNAME/$pname}"
                 mv "$file" "$new_dir_name"
                 file=$new_dir_name
             fi
 
-            # process all files in subdirectory if it is not empty
+            # Process all files in subdirectory if it is not empty
             if ! [ -z "$(ls -A "$file")" ]; then
                 processdirectory $file
             fi
@@ -167,6 +200,7 @@ processdirectory() {
     done
 }
 
+# Process the directory
 processdirectory "."
 
 echo "Created new project using $template. Pretty nifty."
