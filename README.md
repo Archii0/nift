@@ -18,9 +18,23 @@ nift <project name>
 
 This will copy your chosen templates to a new directory, with your project name substituted into the template files and file names. 
 
-There is also a verbose flag, where you can use nift with some extra features, such as a CLI menu, and functionality to view template directory structures:
+Nift can also be ran in verbose mode:
 ```bash
 nift <project name> [-v|--verbose]
+```
+
+Verbose mode features include a CLI menu, and functionality to view template directory structures, such as:
+```bash
+C++/
+├── CMakeLists.txt
+├── lib/
+├── Makefile
+├── src/
+    ├── CMakeLists.txt
+    ├── main.cpp
+├── tests/
+    ├── CMakeLists.txt
+    ├── main.cpp
 ```
 
 ## Making Templates
