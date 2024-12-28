@@ -228,27 +228,46 @@ check_dependencies() {
 }
 
 initialise_git() {
-    # Initialise gitrepo
-    git init -b main
 
-    # Add all files and commit them to local repo
-    git add .
-    git commit -m "Initial commit from nift template"
+    git init -b main &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to initialize git repository." >&2
+        exit 1
+    fi
+
+    git add . &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to add files to git repository." >&2
+        exit 1
+    fi
+
+    git commit -m "Initial commit from nift template" --quiet &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to commit changes to git repository." >&2
+        exit 1
+    fi
+
+    echo "✓ Git repository initialized and initial commit created."
 }
 
+
+
 create_github_repo() {
-    # Create repo with project name and push template proj to gh
-    gh repo create $PROJECT_NAME --public --source=. --remote=upstream --push
+
+    gh repo create "$PROJECT_NAME" --public --source=. --remote=upstream --push &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create GitHub repository." >&2
+        exit 1
+    fi
+
+    echo "GitHub repository created and pushed."
 }
 
 main() {
     check_dependencies
     parse_args "$@"
     validate_input
-    echo "VERBOSE IS $VERBOSE"
-    # check dependencies?
     cur="$PWD"
-    echo "PWD IS $cur"
     cd $TEMPLATE_DIR
     menu_option
     cd $cur
@@ -256,7 +275,6 @@ main() {
     initialise_git
     create_github_repo
     echo "Created new project using $template template. Pretty nifty."
-
 }
 
 main "$@"
