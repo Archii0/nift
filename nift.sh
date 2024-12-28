@@ -1,46 +1,41 @@
 #!/bin/bash
 
+readonly TEMPLATE_DIR=/var/nift/templates
+VERBOSE=0
+PROJECT_NAME=""
+PROJECT_DIR=""
+EXIT_MENUS=false
+
+log() {
+    if [ "$VERBOSE" -eq 1 ]; then
+        echo "$@"
+    fi
+}
+
 usage() {
-    >&2 echo "Usage: $0 <project name> [-v|--verbose]"
+    echo "Usage: $0 <project name> [-v]" >&2
     return 0
 }
 
-VERBOSE=0
-pname=$1
-pdir="./${pname}"
-tdir=/var/nift/templates
+parse_args() {
+    
+    PROJECT_NAME=$1
+    PROJECT_DIR="./${PROJECT_NAME}"
 
-# Error handling for correct usage
-if [ -z "$pname" ]; then
-    usage
-    exit 1
-elif ! [ -d "$tdir" ]; then
-    >&2 echo "Unable to find template directory: $tdir"
-exit 2
-elif [ -d "$pname" ]; then
-    >&2 echo "Project directory already exists: $pdir"
-    exit 3
-fi
+    shift 
+    while getopts ":v" opt; do
+        case $opt in
+            v) VERBOSE=1 ;;
+            \?) usage ;;
+        esac
+    done
+}
 
-shift # Shift to handle the optional verbose flag
-
-# Handle optional verbose flag
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        -v|--verbose)
-            VERBOSE=1
-            ;;
-        *)
-            echo "Unknown option: $1"
-            exit 1
-            ;;
-    esac
-    shift
-done
-
-# Store the current working directory, and cd to templates to show options to the user
-cur="$PWD"
-cd $tdir
+validate_input() {
+    [ -z "$PROJECT_NAME" ] && usage &&  exit 1
+    [ ! -d "$TEMPLATE_DIR" ] && echo "Template directory not found: $TEMPLATE_DIR" >&2 && exit 2
+    [ -d "$PROJECT_NAME" ] && echo "Project directory already exists: $PROJECT_DIR" >&2 && exit 3
+}
 
 display_tree() {
     local dir="$1"
@@ -59,8 +54,6 @@ display_tree() {
     done
 }
 
-exit_menus=false
-
 secondary_menu() {
     template=$1
     while true; do
@@ -76,7 +69,7 @@ secondary_menu() {
 
         case $choice in
             "1")
-                exit_menus=true;
+                EXIT_MENUS=true;
                 return;
                 ;;
             "2")
@@ -133,37 +126,47 @@ main_menu() {
             esac
         done
 
-        if $exit_menus; then
+        if $EXIT_MENUS; then
             return
         fi
 
     done
 }
 
-if [ "$VERBOSE" -eq 1 ]; then
-    main_menu
-else
-    select x in *; do
-        template="$x"
-        break
-    done
-fi
+copy_and_process_template() {
+    # Copy template to project folder
+    # cd $cur
+    cp -R ${TEMPLATE_DIR}/$template $PROJECT_DIR
+    cd $PROJECT_DIR
 
-# Copy template to project folder
-cd $cur
-cp -R ${tdir}/$template $pdir
-cd $pdir
+    processdirectory "."
+
+}
+
+menu_option() {
+    if [ "$VERBOSE" -eq 1 ]; then
+        main_menu
+    else
+        # Select template without verbose options
+        select x in *; do
+            template="$x"
+            break
+        done
+    fi
+}
+
+
 
 # Function for text substitution in files
 processfile() {
     local file=$1
-    new=$(sed "s,PROJECTNAME,$pname,g" <<< "$file")
+    new=$(sed "s,PROJECTNAME,$PROJECT_NAME,g" <<< "$file")
 
     if [ "$file" = "$new" ]; then
-        sed "s,PROJECTNAME,$pname,g" < $file > temp
+        sed "s,PROJECTNAME,$PROJECT_NAME,g" < $file > temp
         mv -f temp $file
     else
-        sed "s,PROJECTNAME,$pname,g" < $file > $new
+        sed "s,PROJECTNAME,$PROJECT_NAME,g" < $file > $new
         if [ -e "$new" ]; then
             rm -f $file
         fi
@@ -188,7 +191,7 @@ processdirectory() {
 
             # Text substitution in the directory name
             if [[ "$base_dir" == *"PROJECTNAME"* ]]; then
-                new_dir_name="${base_dir//PROJECTNAME/$pname}"
+                new_dir_name="${base_dir//PROJECTNAME/$PROJECT_NAME}"
                 mv "$file" "$new_dir_name"
                 file=$new_dir_name
             fi
@@ -203,7 +206,57 @@ processdirectory() {
     done
 }
 
-# Process the directory
-processdirectory "."
 
-echo "Created new project using $template template. Pretty nifty."
+
+
+check_exists_or_install_package() {
+    local pkgName=$1
+
+    if ! dpkg -s $pkgName &>/dev/null; then
+        echo "$pkgName is not installed! Install? (y/n)";
+        read -r REPLY
+        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+            sudo apt-get install -y "$pkgName"
+        fi
+    fi
+}
+
+check_dependencies() {
+    log "Checking depencies..."
+    check_exists_or_install_package "git"
+    check_exists_or_install_package "gh"
+}
+
+initialise_git() {
+    # Initialise gitrepo
+    git init -b main
+
+    # Add all files and commit them to local repo
+    git add .
+    git commit -m "Initial commit from nift template"
+}
+
+create_github_repo() {
+    # Create repo with project name and push template proj to gh
+    gh repo create $PROJECT_NAME --public --source=. --remote=upstream --push
+}
+
+main() {
+    check_dependencies
+    parse_args "$@"
+    validate_input
+    echo "VERBOSE IS $VERBOSE"
+    # check dependencies?
+    cur="$PWD"
+    echo "PWD IS $cur"
+    cd $TEMPLATE_DIR
+    menu_option
+    cd $cur
+    copy_and_process_template
+    initialise_git
+    create_github_repo
+    echo "Created new project using $template template. Pretty nifty."
+
+}
+
+main "$@"
