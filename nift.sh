@@ -253,8 +253,15 @@ initialise_git() {
 
 
 create_github_repo() {
+    echo "Make respository public? (y/n)";
+    read -r REPLY
 
-    gh repo create "$PROJECT_NAME" --public --source=. --remote=upstream --push &>/dev/null
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        gh repo create "$PROJECT_NAME" --public --source=. --remote=upstream --push &>/dev/null
+    else
+        gh repo create "$PROJECT_NAME" --private --source=. --remote=upstream --push &>/dev/null
+    fi
+
     if [ $? -ne 0 ]; then
         echo "Error: Failed to create GitHub repository." >&2
         exit 1
