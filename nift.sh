@@ -1,6 +1,7 @@
 #!/bin/bash
 
-readonly TEMPLATE_DIR=/var/nift/templates
+# readonly TEMPLATE_DIR=/var/nift/templates
+readonly TEMPLATE_DIR=./templates
 VERBOSE=0
 PROJECT_NAME=""
 PROJECT_DIR=""
@@ -270,18 +271,30 @@ create_github_repo() {
     echo "GitHub repository created and pushed."
 }
 
+projecttype() {
+    echo "Choose a project type:"
+    select x in *; do
+        template="$x"
+        break
+    done
+}
+
 main() {
     check_dependencies
     parse_args "$@"
     validate_input
     cur="$PWD"
     cd $TEMPLATE_DIR
-    menu_option
-    cd $cur
-    copy_and_process_template
-    initialise_git
-    create_github_repo
-    echo "Created new project using $template template. Pretty nifty."
+    projecttype
+    # menu_option
+    # cd $cur
+    # copy_and_process_template
+    # initialise_git
+    # create_github_repo
+    # echo "Created new project using $template template. Pretty nifty."
 }
+
+
+
 
 main "$@"
