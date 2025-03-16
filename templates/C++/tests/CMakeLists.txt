@@ -1,11 +1,13 @@
-set(BINARY ${CMAKE_PROJECT_NAME}_tst)
+enable_testing()
 
-file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
+find_package(GTest REQUIRED)
 
-set(SOURCES ${TEST_SOURCES})
+file(GLOB TEST_SOURCES "test_*.cpp")
+add_executable(runTests ${TEST_SOURCES})
 
-add_executable(${BINARY} ${TEST_SOURCES})
+# Link Google Test
+target_link_libraries(runTests PRIVATE GTest::GTest GTest::Main pthread)
 
-add_test(NAME ${BINARY} COMMAND ${BINARY})
-
-target_link_libraries(${BINARY} PUBLIC ${CMAKE_PROJECT_NAME}_lib gtest)
+# Register tests
+add_test(NAME MyTests COMMAND runTests)
+    

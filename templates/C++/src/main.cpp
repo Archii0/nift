@@ -1,6 +1,14 @@
-#include <iostream>
+#include <stdio.h>
 
+/**
+ * @brief This is the main entry point for the program.
+ *
+ * This function prints "Hello, World!" to the console.
+ * It demonstrates the basic usage of Doxygen for documentation.
+ *
+ * @return int Exit status
+ */
 int main() {
-    std::cout << "Welcome!" << std::endl;
+    printf("Hello, World!\n");
     return 0;
 }
