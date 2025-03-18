@@ -139,13 +139,9 @@ copy_and_process_template() {
     # cd $cur
 
     cp -R "${TEMPLATE_DIR}/${PROJECT_TYPE}/$template/." $1
-
     cd $1
-    echo "12"
 
-    # processdirectory "."
-    echo "13"
-
+    processdirectory "."
 }
 
 menu_option() {
@@ -165,13 +161,13 @@ menu_option() {
 # Function for text substitution in files
 processfile() {
     local file=$1
-    new=$(sed "s,test,$PROJECT_NAME,g" <<< "$file")
+    new=$(sed "s,PROJECTNAME,$PROJECT_NAME,g" <<< "$file")
 
     if [ "$file" = "$new" ]; then
-        sed "s,test,$PROJECT_NAME,g" < $file > temp
+        sed "s,PROJECTNAME,$PROJECT_NAME,g" < $file > temp
         mv -f temp $file
     else
-        sed "s,test,$PROJECT_NAME,g" < $file > $new
+        sed "s,PROJECTNAME,$PROJECT_NAME,g" < $file > $new
         if [ -e "$new" ]; then
             rm -f $file
         fi
@@ -183,41 +179,27 @@ processdirectory() {
     local dir=$1
     curDir="$PWD"
 
-    echo "Error:1"
-
     if [ ! -d "$dir" ]; then
         echo "Directory $dir does not exist"
         exit 1
     fi
 
     for file in "$dir"/*; do
-        echo "Error:2"
         if [ -f "./$file" ]; then
-            echo "Error:3"
             processfile $file
-            echo "Error:4"
         elif [ -d "./$file" ]; then
-            echo "Error:5"
             base_dir=$(basename "$file")
-            echo "Error:6"
 
             # Text substitution in the directory name
-            if [[ "$base_dir" == *"test"* ]]; then
-                echo "Error:7"
-                new_dir_name="${base_dir//test/$PROJECT_NAME}"
-                echo "Error:8"
+            if [[ "$base_dir" == *"PROJECTNAME"* ]]; then
+                new_dir_name="${base_dir//PROJECTNAME/$PROJECT_NAME}"
                 mv "$file" "$new_dir_name"
-                echo "Error:9"
                 file=$new_dir_name
-                echo "Error:10"
             fi
-            echo "Error:11"
 
             # Process all files in subdirectory if it is not empty
             if ! [ -z "$(ls -A "$file")" ]; then
-                echo "Error:12"
                 processdirectory "$file"
-                echo "Error:13"
             fi
         else
             echo "$file is neither a file or a directory - please add as an issue on GitHub if this type should be supported."
@@ -305,43 +287,27 @@ main() {
     cd $TEMPLATE_DIR
     project_type
     
-    echo "$PWD"
     if [ "$PROJECT_TYPE" = "Full Stack" ]; then
         PROJECT_TYPE="Frontend"
         mkdir -p $PROJECT_DIR/frontend
         cd $TEMPLATE_DIR/Frontend
-        echo "1"
         menu_option
-        echo "2"
         cd $cur
-        echo "3"
         copy_and_process_template "$PROJECT_DIR/frontend"
-        echo "4"
-
 
         PROJECT_TYPE="Backend"
-        echo "5"
         mkdir -p $PROJECT_DIR/backend
-        echo "6"
         cd $TEMPLATE_DIR/Backend
-        echo "7"
         menu_option
-        echo "8"
         cd $cur
-        echo "9"
         copy_and_process_template $PROJECT_DIR/backend
-        echo "10"
     else
         cd $PROJECT_TYPE
-        echo "$CWD"
         menu_option
         cd $cur
         copy_and_process_template $PROJECT_DIR
     fi
 
-    # menu_option
-    # cd $cur
-    # copy_and_process_template
     initialise_git
     create_github_repo
     echo "Created new project using $template template. Pretty nifty."
