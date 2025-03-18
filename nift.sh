@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# readonly TEMPLATE_DIR=/var/nift/templates
-readonly TEMPLATE_DIR=~/Repos/nift/templates
+readonly TEMPLATE_DIR=/var/nift/templates
 VERBOSE=0
 PROJECT_NAME=""
 PROJECT_DIR=""
