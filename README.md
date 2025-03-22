@@ -6,8 +6,8 @@ Nift is a minimal build system designed for quickly bootstrapping projects on Li
 
 ## Features
 - **Quick Project Setup**: Use templates to generate boilerplate code and directory structures.
+- **Fullstack Generation**: Quickly create connected front and backends.
 - **Customizable Templates**: Create and manage templates tailored to your workflow.
-- **Ease of Use**: Deploy once and generate projects with a single command.
 - **Verbose Mode**: View directory structures and manage templates via an intuitive CLI menu.
 
 ---
