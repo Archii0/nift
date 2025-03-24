@@ -1,6 +1,6 @@
 <div align="center">
     <picture>
-      <img alt="Nift logo" src="https://raw.githubusercontent.com/Archii0/nift/main/assets/niftlogo.png
+      <img alt="Nift logo" src="https://raw.githubusercontent.com/Archii0/nift/logo/assets/niftlogo.png
       " height="128">
     </picture>
   <h1>Nift</h1>
