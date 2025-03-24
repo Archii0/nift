@@ -1,18 +1,30 @@
 <div align="center">
     <picture>
-      <img alt="Nift logo" src="https://raw.githubusercontent.com/Archii0/nift/logo/assets/niftlogo.png
-      " height="128">
+      <img alt="Nift logo" src="https://raw.githubusercontent.com/Archii0/nift/logo/assets/niftlogo.png" height="60"/>
     </picture>
-  <h1>Nift</h1>
+<br><br>
 
-<a href="https://vercel.com"><img alt="Vercel logo" src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=Vercel&labelColor=000"></a>
-<a href="https://www.npmjs.com/package/next"><img alt="NPM version" src="https://img.shields.io/npm/v/next.svg?style=for-the-badge&labelColor=000000"></a>
-<a href="https://github.com/vercel/next.js/blob/canary/license.md"><img alt="License" src="https://img.shields.io/npm/l/next.svg?style=for-the-badge&labelColor=000000"></a>
 
+<a href="https://github.com/Archii0/nift/stargazers">
+<img alt="NPM version" src="https://img.shields.io/github/stars/Archii0/nift?style=for-the-badge&labelColor=000000"/>
+</a>
+<a href="https://github.com/Archii0/nift/network/members">
+<img src="https://img.shields.io/github/forks/Archii0/nift?style=for-the-badge&labelColor=000000"/>
+</a>
+<a href="https://github.com/Archii0/nift/commits/main">
+<img src="https://img.shields.io/github/last-commit/Archii0/nift?style=for-the-badge&labelColor=000000"/>
+</a>
+<a href="https://github.com/Archii0/nift/blob/main/LICENSE">
+<img src="https://img.shields.io/github/license/Archii0/nift?style=for-the-badge&labelColor=000000"/>
+</a>
 </div>
 
+# Nift
 
-Nift is a minimal build system designed for quickly bootstrapping projects on Linux. It simplifies project setup by allowing you to use reusable templates for common file structures and configurations.
+**Nift** is a **minimal build system** designed for quickly **bootstrapping projects** on **Linux**. 
+
+It's useful for **full-stack hackathon projects and personal projects**, enabling you to quickly generate **reusable templates** with common file structures and configurations, so you can start coding right away.
+
 
 ---
 
@@ -22,7 +34,26 @@ Nift is a minimal build system designed for quickly bootstrapping projects on Li
 - **Customizable Templates**: Create and manage templates tailored to your workflow.
 - **Verbose Mode**: View directory structures and manage templates via an intuitive CLI menu.
 
+
 ---
+
+## Built-in Templates
+Nift includes some standard project templates.
+### Frontend
+- **Next.js (React)**
+### Backend
+- **Django (python)**
+- **Flask (python)**
+### Languages
+- **C++**: A C++ project with Google Test and Doxygen, built with CMake.
+- **Python (Script)**: A Python CLI project using `click`, virtual environment, dependency management, argument parsing, packaging, and a README.
+
+Feel free to enhance these templates or add your own to the repository.
+
+
+---
+
+
 
 ## Installation
 
@@ -119,17 +150,6 @@ Once your templates are ready, redeploy:
 sudo ./deploy.sh
 ```
 
----
-
-## Built-in Templates
-Nift includes the following starter templates:
-- **C**: A basic C project with a Makefile.
-- **C++**: A CUDA runtime project with CMake support.
-- **Go**: A Go project starter.
-- **Python**: A basic Python project.
-- **Rust**: A Rust project skeleton.
-
-Feel free to enhance these templates or add your own to the repository.
 
 ---
 
